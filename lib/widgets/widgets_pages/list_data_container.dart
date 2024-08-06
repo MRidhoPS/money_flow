@@ -19,6 +19,7 @@ class DataContainer extends StatefulWidget {
 
 class _DataContainerState extends State<DataContainer> {
   late Future<List<Expenses>> expenses;
+
   ApiUser apiUser = ApiUser();
 
   @override
@@ -51,13 +52,14 @@ class _DataContainerState extends State<DataContainer> {
                 itemCount: result.length,
                 itemBuilder: (context, index) {
                   final data = result[index];
+                  final amount = NumberFormat.decimalPattern('id').format(data.amount);
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => EditPage(
                           userId: widget.usersId,
-                          expenseId: data.expenseId,
-                          amount: data.amount,
+                          expenseId: data.expenseId!,
+                          amount: amount,
                           description: data.description,
                         ),
                       ));
@@ -89,7 +91,7 @@ class _DataContainerState extends State<DataContainer> {
                               ),
                               TextTitle(
                                 title:
-                                    'Rp. ${NumberFormat.decimalPattern('id').format(data.amount)}',
+                                    'Rp. $amount',
                                 align: TextAlign.left,
                                 fontSize: 12,
                                 weight: FontWeight.w400,
@@ -97,38 +99,6 @@ class _DataContainerState extends State<DataContainer> {
                               )
                             ],
                           ),
-                          IconButton(
-                            onPressed: () async {
-                              try {
-                                await apiUser.deleteExpense(
-                                    data.userId, data.expenseId);
-                                setState(() {
-                                  FetchData();
-                                });
-                              } catch (e) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Error"),
-                                        content: Text(e.toString()),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              }
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          )
                         ],
                       ),
                     ),

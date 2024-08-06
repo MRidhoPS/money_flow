@@ -1,3 +1,14 @@
+class TotalAmount{
+  final String amount;
+
+  TotalAmount({required this.amount});
+
+  factory TotalAmount.fromJson(Map<String, dynamic> json){
+    return TotalAmount(amount: json['total_amount']);
+  }
+}
+
+
 class Users {
   int? userId;
   final String username;
@@ -190,11 +201,14 @@ class Expenses{
 
   Map<String, dynamic> editJson() {
     return {
-      'expense_id': expenseId,
-      'user_id': userId,
+      // 'expense_id': expenseId,
+      // 'user_id': userId,
+      // 'amount': amount,
+      // 'description': description,
+      // 'date': date,
+
       'amount': amount,
       'description': description,
-      'date': date,
     };
 
     /** Data yang harus di store ketika update harus sperti ini

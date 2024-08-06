@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool showData = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +25,12 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const HeadingHome(),
+                // widget total expenses
+                HeadingHome(userId: widget.usersId,),
                 const SizedBox(
                   height: 20,
                 ),
+                // widget list expenses
                 DataContainer(usersId: widget.usersId)
               ],
             ),

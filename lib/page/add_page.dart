@@ -1,10 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_flow/models/user_models.dart';
 import 'package:money_flow/page/home_page.dart';
 
+import '../controller/formater.dart';
 import '../controller/user_controller.dart';
+
+
 
 class AddPage extends StatefulWidget {
   final dynamic userId;
@@ -31,6 +35,10 @@ class _AddPageState extends State<AddPage> {
           children: [
             TextFormField(
               controller: amountController,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                ThousandsSeparatorInputFormatter(),
+              ],
               decoration: const InputDecoration(
                   hintText: 'amount',
                   hintStyle: TextStyle(
@@ -53,7 +61,7 @@ class _AddPageState extends State<AddPage> {
               onPressed: () async {
                 final expenses = Expenses(
                   userId: widget.userId,
-                  amount: int.parse(amountController.text),
+                  amount: int.parse(amountController.text.replaceAll('.', '')),
                   description: descriptionController.text,
                   date: DateTime.now().toIso8601String().split('T')[0],
                 );

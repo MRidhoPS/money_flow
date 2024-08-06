@@ -68,6 +68,23 @@ class ApiUser {
     }
   }
 
+  Future<Map<String, dynamic>> getTotalExpenses(int userId) async {
+    final url = parsingUrl('${urlAddress.getUserExpenses}/$userId');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['totalExpenses'] != null) {
+        return data['totalExpenses'];
+      } else {
+        throw Exception('totalExpenses not found in the response');
+      }
+    } else {
+      throw Exception('Failed to load total expenses');
+    }
+  }
+
   // get incomes and expenses
   Future<List<Expenses>> getUserExpenses(int userId) async {
     final url = parsingUrl('${urlAddress.getUserExpenses}/$userId');
@@ -84,21 +101,6 @@ class ApiUser {
     }
   }
 
-  Future<List<Incomes>> getUserIncomes(int userId) async {
-    final url = parsingUrl('${urlAddress.getUserIncomes}/$userId');
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonRes = jsonDecode(response.body);
-      List<dynamic> data = jsonRes['data'];
-      List<Incomes> result = data.map((e) => Incomes.fromJson(e)).toList();
-      return result;
-    } else {
-      throw Exception('Failed to load Incomes');
-    }
-  }
-
   Future<dynamic> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt('user_id');
@@ -106,7 +108,8 @@ class ApiUser {
 
   // create incomes and expenses
   Future<void> createExpense(Expenses expenses) async {
-    final url = parsingUrl('${urlAddress.createUserExpenses}/${expenses.userId}');
+    final url =
+        parsingUrl('${urlAddress.createUserExpenses}/${expenses.userId}');
 
     try {
       final response = await http.post(
@@ -127,32 +130,10 @@ class ApiUser {
     }
   }
 
-  Future<void> createIncome(Incomes incomes) async {
-    final url =
-        parsingUrl('${urlAddress.createUserIncomes}/${incomes.userId}');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(incomes.toJson()),
-      );
-
-      if (response.statusCode == 201) {
-        print('Data berhasil disisipkan');
-      } else {
-        print('Gagal menyisipkan data: ${response.statusCode}');
-        throw Exception('Gagal menyisipkan data');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Terjadi kesalahan saat mencoba menyisipkan data');
-    }
-  }
-
   // delete incomes and expenses
   Future<void> deleteExpense(int? userId, int? expenseId) async {
-    final uri = parsingUrl('${urlAddress.deleteUserExpenses}/$userId/$expenseId');
+    final uri =
+        parsingUrl('${urlAddress.deleteUserExpenses}/$userId/$expenseId');
     final response = await http.delete(
       uri,
       headers: <String, String>{
@@ -165,25 +146,10 @@ class ApiUser {
     }
   }
 
-  Future<void> deleteIncome(int? userId, int? incomeId) async {
-    final uri =
-        parsingUrl('${urlAddress.deleteUserIncomes}/$userId/$incomeId');
-    final response = await http.delete(
-      uri,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete data: ${response.body}');
-    }
-  }
-
   // edit income and expenses
-  Future<void> editExpense(Expenses expenses) async {
+  Future<void> editExpense(Expenses expenses, int userId, int expenseId) async {
     final uri = parsingUrl(
-      '${urlAddress.editUserExpenses}/${expenses.userId}/${expenses.expenseId}',
+      'http://192.168.18.17:4000/api/updateUsersExpenses/$userId/$expenseId',
     );
     final response = await http.patch(uri,
         headers: <String, String>{
@@ -191,23 +157,7 @@ class ApiUser {
         },
         body: jsonEncode(expenses.editJson()));
     if (response.statusCode != 200) {
-      throw Exception('Failed to update student');
-    } else {
-      print(response.body);
-    }
-  }
-
-  Future<void> editIncome(Incomes incomes) async {
-    final uri = parsingUrl(
-      '${urlAddress.editUserIncomes}/${incomes.userId}/${incomes.incomesId}',
-    );
-    final response = await http.patch(uri,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(incomes.editJson()));
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update student');
+      throw Exception('Failed to update data');
     } else {
       print(response.body);
     }
