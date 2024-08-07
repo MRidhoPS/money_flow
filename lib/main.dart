@@ -10,9 +10,21 @@ class MoneyFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen()
-    );
+    return MaterialApp(
+        theme: ThemeData(
+            colorScheme: const ColorScheme(
+                brightness: Brightness.light,
+                primary: Colors.white,
+                onPrimary: Colors.white,
+                secondary: Colors.blue,
+                onSecondary: Colors.blue,
+                error: Colors.red,
+                onError: Colors.red,
+                background: Color.fromARGB(255, 24, 10, 55),
+                onBackground: Colors.blue,
+                surface: Colors.blue,
+                onSurface: Colors.white)),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen());
   }
 }

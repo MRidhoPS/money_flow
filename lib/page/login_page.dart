@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_flow/controller/user_controller.dart';
 import 'package:money_flow/page/home_page.dart';
+import 'package:money_flow/page/regist_page.dart';
 
 import '../widgets/base_widgets/base_components.dart';
 import '../widgets/widgets_pages/heading_login.dart';
@@ -23,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 24, 10, 55),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -58,16 +58,13 @@ class _LoginPageState extends State<LoginPage> {
                           weight: FontWeight.bold,
                           color: Colors.white),
                       const SizedBox(
-                        height: 40,
+                        height: 10,
                       ),
                       FieldContainer(
                         controllerText: emailController,
                         title: 'Your Email Address',
                         hintText: 'email',
                         obscureText: false,
-                      ),
-                      const SizedBox(
-                        height: 20,
                       ),
                       FieldContainer(
                         controllerText: passwordController,
@@ -140,7 +137,24 @@ class _LoginPageState extends State<LoginPage> {
                             sizeFont: 16,
                             fontWeight: FontWeight.w500,
                             fontColor: Colors.white),
-                      )
+                      ),
+                      const SizedBox(height: 50),
+                      Center(
+                        child: TextButton(
+                            onPressed: () =>
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegisterPage(),
+                                    ),
+                                    (route) => false),
+                            child: const TextTitle(
+                                title: "Register Account?",
+                                align: TextAlign.center,
+                                fontSize: 14,
+                                weight: FontWeight.w500,
+                                color: Colors.white)),
+                      ),
                     ],
                   ),
                 ),
@@ -152,9 +166,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-
-
-
-

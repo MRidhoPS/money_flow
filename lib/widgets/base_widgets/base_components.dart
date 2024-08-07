@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../../controller/formater.dart';
 
 class TextSub extends StatelessWidget {
   const TextSub({
@@ -53,13 +56,12 @@ class TextTitle extends StatelessWidget {
 }
 
 class FieldContainer extends StatelessWidget {
-  const FieldContainer({
-    super.key,
-    required this.controllerText,
-    required this.title,
-    required this.hintText,
-    required this.obscureText
-  });
+  const FieldContainer(
+      {super.key,
+      required this.controllerText,
+      required this.title,
+      required this.hintText,
+      required this.obscureText});
 
   final TextEditingController controllerText;
   final String title;
@@ -71,31 +73,40 @@ class FieldContainer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        TextFormField(
-          controller: controllerText,
-          textAlign: TextAlign.start,
-          obscureText: obscureText,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16
+        Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Text(
+            title,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
           ),
-          decoration: InputDecoration(
-            hintText: hintText,
-            border: const OutlineInputBorder(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: TextFormField(
+            controller: controllerText,
+            textAlign: TextAlign.start,
+            obscureText: obscureText,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            hintStyle: const TextStyle(fontSize: 10, color: Colors.white60),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              filled: true,
+              fillColor: Colors.black.withOpacity(0.15),
+              hoverColor: const Color.fromARGB(255, 111, 50, 242),
+              focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              hintStyle: const TextStyle(
+                fontSize: 10,
+                color: Colors.white70,
+              ),
+            ),
           ),
         ),
       ],
@@ -144,6 +155,64 @@ class ButtonContainer extends StatelessWidget {
           color: fontColor,
         ),
       )),
+    );
+  }
+}
+
+class TextFieldAmount extends StatelessWidget {
+  const TextFieldAmount({
+    super.key,
+    required this.amountController,
+    required this.title,
+  });
+
+  final TextEditingController amountController;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Text(
+            title,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: TextFormField(
+            controller: amountController,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              ThousandsSeparatorInputFormatter(),
+            ],
+            decoration: InputDecoration(
+              hintText: 'Amount',
+              border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              filled: true,
+              fillColor: Colors.black.withOpacity(0.15),
+              hoverColor: const Color.fromARGB(255, 111, 50, 242),
+              focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              hintStyle: const TextStyle(
+                fontSize: 10,
+                color: Colors.white70,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
